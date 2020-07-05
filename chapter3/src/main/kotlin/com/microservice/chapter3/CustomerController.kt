@@ -17,4 +17,9 @@ class CustomerController {
 
     @RequestMapping(value = ["/customer/{id}"], method = [RequestMethod.GET])
     fun getCustomer(@PathVariable id: Int) = customers[id]
+
+    @RequestMapping(value = ["/customer/"], method = [RequestMethod.POST])
+    fun createCustomer(@RequestBody customer: Customer) {
+        customers[customer.id] = customer
+    }
 }
