@@ -22,8 +22,10 @@ class CustomerController {
     }
 
     @PostMapping(value = ["/customer/", "/customer"])
-    fun createCustomer(@RequestBody customer: Customer): ResponseEntity<Unit> =
-        ResponseEntity(customerService.createCustomer(customer), HttpStatus.CREATED)
+    fun createCustomer(@RequestBody customer: Customer): ResponseEntity<Unit?> {
+        customerService.createCustomer(customer)
+        return ResponseEntity<Unit?>(null, HttpStatus.CREATED)
+    }
 
     @PutMapping(value = ["/customer/{id}"])
     fun updateCustomer(@PathVariable id: Int, @RequestBody customer: Customer): ResponseEntity<Unit> {
