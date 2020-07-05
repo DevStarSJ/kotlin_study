@@ -7,28 +7,20 @@ import java.util.concurrent.ConcurrentHashMap
 @RestController
 class CustomerController {
     @Autowired
-    lateinit var customers: ConcurrentHashMap<Int, Customer>
+    private lateinit var customerService: CustomerService
 
     @GetMapping(value = ["/customers"])
-    fun getCustomers(@RequestParam(required = false, defaultValue = "") nameFilter: String) =
-        customers.filter {
-            it.value.name.contains(nameFilter, true)
-        }.map(Map.Entry<Int, Customer>::value).toList()
+    fun getCustomers(@RequestParam(required = false, defaultValue = "") nameFilter: String) = customerService.searchCustomers(nameFilter)
 
     @GetMapping(value = ["/customer/{id}"])
-    fun getCustomer(@PathVariable id: Int) = customers[id]
+    fun getCustomer(@PathVariable id: Int) = customerService.getCustomer(id)
 
     @PostMapping(value = ["/customer/", "/customer"])
-    fun createCustomer(@RequestBody customer: Customer) {
-        customers[customer.id] = customer
-    }
+    fun createCustomer(@RequestBody customer: Customer) = customerService.createCustomer(customer)
 
     @PutMapping(value = ["/customer/{id}"])
-    fun updateCustomer(@PathVariable id: Int, @RequestBody customer: Customer) {
-        deleteCustomer(id)
-        createCustomer(customer)
-    }
+    fun updateCustomer(@PathVariable id: Int, @RequestBody customer: Customer) = customerService.updateCustomer(id, customer)
 
     @DeleteMapping(value = ["/customer/{id}"])
-    fun deleteCustomer(@PathVariable id: Int) = customers.remove(id)
+    fun deleteCustomer(@PathVariable id: Int) = customerService.deleteCustomer(id)
 }
