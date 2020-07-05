@@ -7,8 +7,8 @@ import java.util.concurrent.ConcurrentHashMap
 class CustomerServiceImpl : CustomerService {
     companion object {
         val initialCustomers = arrayOf(
-            Customer(1, "Kotlin"),
-            Customer(2, "Spring"),
+            Customer(1, "Kotlin", Customer.Telephone("+44", "7123456789")),
+            Customer(2, "Spring", Customer.Telephone("+44", "7123456789")),
             Customer(3, "Microservice"))
     }
 
