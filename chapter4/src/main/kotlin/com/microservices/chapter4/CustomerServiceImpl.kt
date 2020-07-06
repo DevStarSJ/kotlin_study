@@ -1,6 +1,7 @@
 package com.microservices.chapter4
 
 import org.springframework.stereotype.Component
+import reactor.kotlin.core.publisher.toMono
 import java.util.concurrent.ConcurrentHashMap
 
 @Component
@@ -13,7 +14,7 @@ class CustomerServiceImpl : CustomerService {
     }
     val customers = ConcurrentHashMap<Int, Customer>(initialCustomers.associateBy(Customer::id))
 
-    override fun getCustomer(id: Int): Customer? = customers[id]
+    override fun getCustomer(id: Int) = customers[id]?.toMono()
 
     override fun searchCustomers(nameFilter: String): List<Customer> = customers.filter {
         it.value.name.contains(nameFilter, true)
