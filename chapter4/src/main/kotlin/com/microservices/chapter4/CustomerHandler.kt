@@ -16,5 +16,6 @@ class CustomerHandler(val customerService: CustomerService) {
 
     fun search(serverRequest: ServerRequest) = ok().body(customerService.searchCustomers(serverRequest.queryParam("nameFilter").orElse("")), Customer::class.java)
 
-    fun create(serverRequest: ServerRequest) = customerService.createCustomer(serverRequest.bodyToMono()).flatMap { status(HttpStatus.CREATED).body(fromObject(it)) }
+    fun create(serverRequest: ServerRequest) = customerService.createCustomer(serverRequest.bodyToMono()).flatMap {
+        created(java.net.URI.create("/functional/customer/${it.id}")).build() }
 }
