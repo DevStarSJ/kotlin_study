@@ -7,6 +7,7 @@ import org.springframework.web.reactive.function.BodyInserters.fromObject
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse.*
 import org.springframework.web.reactive.function.server.bodyToMono
+import reactor.kotlin.core.publisher.onErrorResume
 
 @Component
 class CustomerHandler(val customerService: CustomerService) {
@@ -17,5 +18,8 @@ class CustomerHandler(val customerService: CustomerService) {
     fun search(serverRequest: ServerRequest) = ok().body(customerService.searchCustomers(serverRequest.queryParam("nameFilter").orElse("")), Customer::class.java)
 
     fun create(serverRequest: ServerRequest) = customerService.createCustomer(serverRequest.bodyToMono()).flatMap {
-        created(java.net.URI.create("/functional/customer/${it.id}")).build() }
+            created(java.net.URI.create("/functional/customer/${it.id}")).build()
+        }.onErrorResume(Exception::class) {
+            badRequest().body(fromObject("error"))
+        }
 }
